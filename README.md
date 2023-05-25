@@ -32,6 +32,18 @@
 11. Finally, push the changes to the desired branch.
 	> git push \<remote> \<branch>
 
+**Adding .gitignore file:**
+
+1. Open terminal and cd to your local repo >
+	> cd C:\path\to\your\repository
+2. Create a new .gitignore file, if it doesn't exist, and add the cmd.bat file to it using the echo command >
+	> echo cmd.bat >> .gitignore
+3. Verify that the file has been added by checking dir in the terminal >
+	> dir
+4. Don't forget to add and push the .gitignore file!
+	> git add .gitignore
+	> git commit -m "Add .gitignore and exclude cmd.bat file"
+	> git push <remote> branch-name
 
 ## Additional commands:
 - Check status
