@@ -103,6 +103,61 @@ const venueAddress = ['4 Bridle StreetHarrisonburg, VA 22801',
                       '7504 High Noon CourtNorwood, MA 02062',
                       '9 Fawn St.Marcus Hook, PA 19061'];
 
+/* TEST ZONE BELOW */
+
+// Merge venue data into object
+class venue {
+    constructor(name) {
+        this.name = name;
+    }
+}
+
+const venues = [];
+
+for (let index in venueNames) {
+    let venueObject = new venue(venueNames[index]);
+    venues.push(venueObject);
+}
+
+/*
+console.log(venues);
+
+Prints
+[
+    venue { name: 'The Avenue' },
+    venue { name: 'Paradise Gardens' },
+    venue { name: 'Atlantis' },
+    venue { name: 'The Blue Fin' },
+    venue { name: 'The Greenhouse' },
+    venue { name: 'Big Orchid' },
+    venue { name: 'Lotus Lakes' },
+    venue { name: 'The Golden Plaza' },
+    venue { name: 'Omni' },
+    venue { name: 'Prime Lands' }
+]
+*/
+
+
+/*
+console.log(JSON.stringify(venues));
+
+Prints
+[
+    {"name":"The Avenue"},
+    {"name":"Paradise Gardens"},
+    {"name":"Atlantis"},
+    {"name":"The Blue Fin"},
+    {"name":"The Greenhouse"},
+    {"name":"Big Orchid"},
+    {"name":"Lotus Lakes"},
+    {"name":"The Golden Plaza"},
+    {"name":"Omni"},
+    {"name":"Prime Lands"}
+]
+*/
+
+/* TEST ZONE ABOVE */
+
 // Create json file
 
 
