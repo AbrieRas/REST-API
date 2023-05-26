@@ -1,8 +1,8 @@
 // implementations
-const fs = require('fs');
+const fs = require('fs/promises');
+const path = require('path');
 
 // Re-use functions
-
 // Create ten random numbers between inputs
 const createTenRandomNumbers = (start, end) => {
     let numbers = [];
@@ -103,22 +103,37 @@ const venueAddress = ['4 Bridle StreetHarrisonburg, VA 22801',
                       '7504 High Noon CourtNorwood, MA 02062',
                       '9 Fawn St.Marcus Hook, PA 19061'];
 
-/* TEST ZONE BELOW */
-
 // Merge venue data into object
-class venue {
-    constructor(name) {
+class Venue {
+    constructor(id, name, length, width, sqMeters, address) {
+        this.id = id;
         this.name = name;
+        this.length = length;
+        this.width = width;
+        this.sqMeters = sqMeters;
+        this.address = address;
     }
 }
 
 const venues = [];
 
 for (let index in venueNames) {
-    let venueObject = new venue(venueNames[index]);
+    let venueObject = new Venue(
+                                venueIds[index],
+                                venueNames[index],
+                                venueLength[index],
+                                venueWidth[index],
+                                venueSquareMeters[index],
+                                venueAddress[index]
+                            );
     venues.push(venueObject);
 }
 
+// Create json file
+
+
+
+// Print data for json file
 /*
 console.log(venues);
 
@@ -156,15 +171,18 @@ Prints
 ]
 */
 
-/* TEST ZONE ABOVE */
-
-// Create json file
-
-
-// Print json file
-
-
 // Save json file
+const filePath = path.join(__dirname, '..', 'Data', 'Venues.json');
 
+const storeDataInJsonFile = async (data) => {
+    try {
+        await fs.writeFile(filePath, data);
+    } catch (err) {
+        console.log('There was an error writing data to a JSON file.\n\nError: ' + err);
+    }
+}
+
+storeDataInJsonFile(JSON.stringify(venues));
 
 // Read json file and print contents
+
