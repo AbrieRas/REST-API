@@ -1,15 +1,17 @@
-// implementations
+// ===> implementations
 const fs = require('fs/promises');
 const path = require('path');
 
-// Re-use functions
+// ===> Re-use functions
 // Create ten random numbers between inputs
-const createTenRandomNumbers = (start, end) => {
+const createRandomNumbers = (start, end, repeatTimes=10) => {
     let numbers = [];
     let randomNumber = 0;
 
-    randomNumber = Math.floor(Math.random() * (end - start)) + start;
-    numbers.push(randomNumber);
+    for (let i=0; i<repeatTimes; i++) {
+        randomNumber = Math.floor(Math.random() * (end - start)) + start;
+        numbers.push(randomNumber);
+    }
 
     return numbers;
 };
@@ -72,7 +74,7 @@ const createTenRandomIds = () => {
     return ids;
 };
 
-// Data to import into js files
+// ===> Data to import into js files
 const venueIds = createTenRandomIds();
 
 const venueNames = ['The Avenue',
@@ -86,9 +88,9 @@ const venueNames = ['The Avenue',
                     'Omni',
                     'Prime Lands'];
 
-const venueLength = createTenRandomNumbers(5, 25);
+const venueLength = createRandomNumbers(5, 25, 10);
 
-const venueWidth = createTenRandomNumbers(5, 25);
+const venueWidth = createRandomNumbers(5, 25, 10);
 
 const venueSquareMeters = multiplyTwoArrays(venueLength, venueWidth);
 
@@ -103,7 +105,8 @@ const venueAddress = ['4 Bridle StreetHarrisonburg, VA 22801',
                       '7504 High Noon CourtNorwood, MA 02062',
                       '9 Fawn St.Marcus Hook, PA 19061'];
 
-// Merge venue data into object
+// ===> Merge data into object
+// Venues
 class Venue {
     constructor(id, name, length, width, sqMeters, address) {
         this.id = id;
@@ -129,11 +132,27 @@ for (let index in venueNames) {
     venues.push(venueObject);
 }
 
-// Create json file
+// Users
+class Users {
+    constructor(id, username, password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+}
+
+const users = [];
 
 
 
-// Print data for json file
+// Photos
+
+
+// ===> Create json file
+
+
+
+// ===> Print data for json file
 /*
 console.log(venues);
 
@@ -171,18 +190,20 @@ Prints
 ]
 */
 
-// Save json file
-const filePath = path.join(__dirname, '..', 'Data', 'Venues.json');
+// ===> Save json file
+// Save template
+const filePathToVenues = path.join(__dirname, '..', 'Data', 'Venues.json');
 
 const storeDataInJsonFile = async (data) => {
     try {
-        await fs.writeFile(filePath, data);
+        await fs.writeFile(filePathToVenues, data);
     } catch (err) {
         console.log('There was an error writing data to a JSON file.\n\nError: ' + err);
     }
 }
 
-storeDataInJsonFile(JSON.stringify(venues));
+// Execute save (commented out due to overlapping saves)
+// storeDataInJsonFile(JSON.stringify(venues));
 
-// Read json file and print contents
+// ===> Read json file and print contents
 
