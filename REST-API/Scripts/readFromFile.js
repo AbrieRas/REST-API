@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fs = require('fs');
 
 const readFromFileForItems = async (path, searchItem='') => {
     try {
@@ -28,6 +28,17 @@ const readFromFileForItems = async (path, searchItem='') => {
     }
 };
 
+// Read the entire database file
+const readDatabase = (pathToFile) => {
+    try {
+        const data = fs.readFileSync(pathToFile);
+        return JSON.parse(data);
+    } catch (error) {
+        console.error('readDatabase: Error reading database: ', error);
+        return [];
+    }
+};
+
 /**
  * Reads file and returns its content. If second param is given, function returns content of all Object.secondParam
  * @param {string} path - The path to the file to read.
@@ -35,3 +46,9 @@ const readFromFileForItems = async (path, searchItem='') => {
  * @returns {number} Object of data.
  */
 module.exports = { readFromFileForItems };
+
+/**
+ * 
+ * 
+ */
+module.exports = { readDatabase };

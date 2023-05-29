@@ -1,4 +1,4 @@
-const fs = require('fs/promises');
+const fs = require('fs');
 
 const asyncStoreDataInJsonFile = async (pathToSave, data) => {
     const stringifiedData = JSON.stringify(data);
@@ -17,9 +17,24 @@ const storeDataInJsonFile = async (pathToSave, data) => {
     }
 };
 
+// Write the updated data back to the database file
+const writeToDatabase = (pathToDatabase, data) => {
+    try {
+        fs.writeFileSync(pathToDatabase, JSON.stringify(data, null, 2));
+    } catch (error) {
+        console.error('Error writing to database:', error);
+    }
+};
+
 /**
  * Creates/overwrites file in path and then stores object data from second param.
  * @param {string} path - The path to the file to write.
  * @param {string} object - Object to store in path param.
  */
 module.exports = { storeDataInJsonFile };
+
+/**
+ * 
+ * 
+ */
+module.exports = { writeToDatabase };
