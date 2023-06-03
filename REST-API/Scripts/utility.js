@@ -129,11 +129,55 @@ const getFilePathByDatabaseType = (databaseType) => {
             filepath = filePathToPhotos;
             break;
         default:
-            console.error(`getAllRecords: Invalid databaseType: ${databaseType}`);
+            // console.error(`getAllRecords: Invalid databaseType: ${databaseType}`);
             return;
     }
     return filepath;
 };
 
+// API Response codes and messages
+const getResponseMessage = responseCode => {
+    if (typeof responseCode != 'number') {
+        console.log(`getResponseMessage: Code is not a number: ${responseCode}`);
+        return;
+    }
+    let responseMessage = '';
+
+    switch (responseCode) {
+        case 200:
+            responseMessage = 'OK';
+            break;
+        case 201:
+            responseMessage = 'Data added successfully'
+            break;
+        case 400:
+            responseMessage = 'Bad Request';
+            break;
+        case 401:
+            responseMessage = 'Unauthorized';
+            break;
+        case 403:
+            responseMessage = 'Forbidden';
+            break;
+        case 404:
+            responseMessage = 'Not Found';
+            break;
+        case 409:
+            responseMessage = 'Request could not be processed';
+            break;
+        case 422:
+            responseMessage = 'Unprocessable Entity';
+            break;
+        case 500:
+            responseMessage = 'Internal Server Error';
+            break;
+        default:
+            responseMessage = 'Unknown Response';
+      }
+
+      return `{ message: ${responseMessage} }`;
+};
+
 module.exports = { createRandomIds, createRandomNumbers, multiplyTwoArrays,
-    asyncEncryptData, createPhotoURLs, getFilePathByDatabaseType };
+    asyncEncryptData, createPhotoURLs, getFilePathByDatabaseType,
+    getResponseMessage };

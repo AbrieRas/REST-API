@@ -14,26 +14,6 @@ const filePathToVenues = path.join(__dirname, '..', 'Data', 'Venues.json');
 const filePathToUsers = path.join(__dirname, '..', 'Data', 'Users.json');
 const filePathToPhotos = path.join(__dirname, '..', 'Data', 'Photos.json');
 
-// // Function to read the entire database file
-// const readDatabase = () => {
-//     try {
-//         const data = fs.readFileSync('database.json');
-//         return JSON.parse(data);
-//     } catch (error) {
-//         console.error('Error reading database:', error);
-//         return [];
-//     }
-// };
-
-// // Function to write the updated data back to the database file
-// const writeToDatabase = (data) => {
-//     try {
-//         fs.writeFileSync('database.json', JSON.stringify(data, null, 2));
-//     } catch (error) {
-//         console.error('Error writing to database:', error);
-//     }
-// };
-
 // Add a new record to the database
 const addRecord = (record, databaseType) => {
     const database = readDatabase(getFilePathByDatabaseType(databaseType));
@@ -41,40 +21,55 @@ const addRecord = (record, databaseType) => {
     writeToDatabase(getFilePathByDatabaseType(databaseType), database);
 };
 
-// Delete a record from the database based on its ID
-const deleteRecordByKey = (key, value, databaseType) => {
+const deleteRecordByKey = (key, value, databaseType, targetAllRecords = false) => {
     try {
         const database = readDatabase(getFilePathByDatabaseType(databaseType));
-        // const updatedDatabase = database.filter(record => record.id !== recordId);
-        const updatedDatabase = database.filter(record => record[key] !== value);
+
+        let updatedDatabase;
+        if (targetAllRecords) {
+            updatedDatabase = database.filter(record => record[key] !== value);
+        } else {
+            const index = database.findIndex(record => record[key] === value);
+            if (index !== -1) {
+                updatedDatabase = [...database.slice(0, index), ...database.slice(index + 1)];
+            } else {
+                console.log(`INTERNAL SERVER ERROR: deleteRecordByKey: [WARN] No record matching the specified key-value pair found: ${key}:${value}`);
+                return 'error';
+            }
+        }
+
         writeToDatabase(getFilePathByDatabaseType(databaseType), updatedDatabase);
+        return 'success';
     } catch (error) {
-        console.error(`deleteRecordByKey: The record could not be deleted: ${error}`);
+        console.log(`INTERNAL SERVER ERROR: deleteRecordByKey: The record could not be deleted: ${error}`);
     }
 };
 
-const updateRecordByKey = (key, value, updatedRecord, databaseType, updateFirstRecord = false) => {
+const updateRecordByKey = (key, value, updatedRecord, databaseType, targetAllRecords = false) => {
     try {
         const database = readDatabase(getFilePathByDatabaseType(databaseType));
         let recordUpdated = false;
 
         const updatedDatabase = database.map(record => {
-        if (!recordUpdated && record[key] === value) {
-            recordUpdated = true;
-            return { ...record, ...updatedRecord };
-        }
+            if (record[key] === value) {
+                if (targetAllRecords || !recordUpdated) {
+                    recordUpdated = true;
+                    return { ...record, ...updatedRecord };
+                }
+            }
             return record;
         });
-  
-        if (!recordUpdated && updateFirstRecord) {
-            console.error(`updateRecordByKey: [WARN] No record matching the specified key-value pair found.`);
+
+        if (!recordUpdated && !targetAllRecords) {
+            console.error(`INTERNAL SERVER ERROR: updateRecordByKey: [WARN] No record matching the specified key-value pair found: ${key}:${value}`);
         }
 
         writeToDatabase(getFilePathByDatabaseType(databaseType), updatedDatabase);
     } catch (error) {
-        console.error(`updateRecordByKey: The record could not be updated: ${error}`);
+        console.error(`INTERNAL SERVER ERROR: updateRecordByKey: The record could not be updated: ${error}`);
     }
 };
+
 
 
 // Retrieve all records from the database
@@ -91,7 +86,7 @@ const getAllRecords = (databaseType) => {
             filepath = filePathToPhotos;
             break;
         default:
-            console.error(`getAllRecords: Invalid databaseType: ${databaseType}`);
+            console.error(`INTERNAL SERVER ERROR: getAllRecords: Invalid databaseType: ${databaseType}`);
             return;
     }
     return readDatabase(filepath);
@@ -146,5 +141,7 @@ const getAllRecords = (databaseType) => {
  */
 // updateRecordByKey('name', 'Test venue', updatedRecord, 'venue', true);
 
-const allRecords = getAllRecords('venue');
-console.table(allRecords);
+// const allRecords = getAllRecords('user');
+// console.table(allRecords);
+
+module.exports = { getAllRecords, addRecord, updateRecordByKey, deleteRecordByKey };

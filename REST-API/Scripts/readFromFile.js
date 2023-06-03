@@ -41,6 +41,7 @@ const readDatabase = (pathToFile) => {
 
 /**
  * Reads file and returns its content. If second param is given, function returns content of all Object.secondParam
+ * 
  * @param {string} path - The path to the file to read.
  * @param {string} searchItem - The object's key to search for.
  * @returns {number} Object of data.

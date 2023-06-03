@@ -224,6 +224,7 @@ for (let index in photoIds) {
 
 /**
  * Creates/overwrites file in path and then stores object data from second param.
+ * 
  * @param {string} path - The path to the file to write.
  * @param {string} object - Object to store in path param.
  */
@@ -231,6 +232,7 @@ for (let index in photoIds) {
 
 /**
  * Reads file and returns its content. If second param is given, function returns content of all Object.secondParam
+ * 
  * @param {string} path - The path to the file to read.
  * @param {string} searchItem - The object's key to search for.
  * @returns {object} Object of data.

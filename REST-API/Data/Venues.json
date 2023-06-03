@@ -94,5 +94,45 @@
     "width": 25,
     "sqMeters": 625,
     "address": "Test address"
+  },
+  {
+    "id": "TestID2",
+    "name": "Test venue",
+    "length": 8,
+    "width": 2,
+    "sqMeters": 114,
+    "address": "Test address: 31"
+  },
+  {
+    "id": "TestID3",
+    "name": "Test venue",
+    "length": 4,
+    "width": 6,
+    "sqMeters": 447,
+    "address": "Test address: 31"
+  },
+  {
+    "id": "newTestID",
+    "name": "Test venue",
+    "length": 11,
+    "width": 18,
+    "sqMeters": 373,
+    "address": "Test address v2: 1"
+  },
+  {
+    "id": "testID",
+    "name": "Test venue",
+    "length": 8,
+    "width": 19,
+    "sqMeters": 549,
+    "address": "Test address: 1"
+  },
+  {
+    "id": "JPWasHere",
+    "name": "Test venue",
+    "length": 3,
+    "width": 10,
+    "sqMeters": 498,
+    "address": "Test address: 1"
   }
 ]
