@@ -1,6 +1,13 @@
 // ===> implementations
-const fs = require('fs/promises');
 const path = require('path');
+const argon2 = require('argon2');
+
+// =================================
+// File paths
+// =================================
+const filePathToVenues = path.join(__dirname, '..', 'Data', 'Venues.json');
+const filePathToUsers = path.join(__dirname, '..', 'Data', 'Users.json');
+const filePathToPhotos = path.join(__dirname, '..', 'Data', 'Photos.json');
 
 // ===> Re-use functions
 // Create ten random numbers between inputs
@@ -55,14 +62,19 @@ const replaceFormatWithCharacters = (letters, numbers, format) => {
 };
 
 // Generate random venue id
-const createTenRandomIds = () => {
+const createRandomIds = (amount=10) => {
+    if (typeof amount != 'number') {
+        console.log(`createRandomIds: Did not receive a number: ${amount}`);
+        return;
+    }
+
     const letters = [...('abcdefghijklmnopqrstuvwxyz'.toUpperCase())];
-    const numbers = createNumbers(0, 10);
+    const numbers = createNumbers(0, amount);
     const splitFormat = [...'LLNNLNLNNL'];
 
     let ids = [];
 
-    while (ids.length < 10) {
+    while (ids.length < amount) {
         // Replace format with random characters
         const finalFormat = replaceFormatWithCharacters(letters, numbers, splitFormat);
 
@@ -74,136 +86,98 @@ const createTenRandomIds = () => {
     return ids;
 };
 
-// ===> Data to import into js files
-const venueIds = createTenRandomIds();
+// Create array of local pictures' paths
+const createPhotoURLs = (amount=10) => {
+    const paths = [];
+    let pathToPhoto = '';
 
-const venueNames = ['The Avenue',
-                    'Paradise Gardens',
-                    'Atlantis',
-                    'The Blue Fin',
-                    'The Greenhouse',
-                    'Big Orchid',
-                    'Lotus Lakes',
-                    'The Golden Plaza',
-                    'Omni',
-                    'Prime Lands'];
-
-const venueLength = createRandomNumbers(5, 25, 10);
-
-const venueWidth = createRandomNumbers(5, 25, 10);
-
-const venueSquareMeters = multiplyTwoArrays(venueLength, venueWidth);
-
-const venueAddress = ['4 Bridle StreetHarrisonburg, VA 22801',
-                      '345 Swanson CourtHilliard, OH 43026',
-                      '7520 Grandrose StreetAkron, OH 44312',
-                      '890 Young St.Minot, ND 58701',
-                      '154 Rockwell DrivePueblo, CO 81001',
-                      '401 School St.Charlotte, NC 28205',
-                      '9583 Thatcher St.Depew, NY 14043',
-                      '18 Walnut StreetNew York, NY 10002',
-                      '7504 High Noon CourtNorwood, MA 02062',
-                      '9 Fawn St.Marcus Hook, PA 19061'];
-
-// ===> Merge data into object
-// Venues
-class Venue {
-    constructor(id, name, length, width, sqMeters, address) {
-        this.id = id;
-        this.name = name;
-        this.length = length;
-        this.width = width;
-        this.sqMeters = sqMeters;
-        this.address = address;
+    for (let i=0; i<amount; i++) {
+        pathToPhoto = path.join(__dirname, '..', 'Picturs', `${i+1}.bmp`);
+        paths.push(pathToPhoto);
     }
-}
 
-const venues = [];
+    return paths;
+};
 
-for (let index in venueNames) {
-    let venueObject = new Venue(
-                                venueIds[index],
-                                venueNames[index],
-                                venueLength[index],
-                                venueWidth[index],
-                                venueSquareMeters[index],
-                                venueAddress[index]
-                            );
-    venues.push(venueObject);
-}
-
-// Users
-class Users {
-    constructor(id, username, password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
-}
-
-const users = [];
-
-
-
-// Photos
-
-
-// ===> Create json file
-
-
-
-// ===> Print data for json file
-/*
-console.log(venues);
-
-Prints
-[
-    venue { name: 'The Avenue' },
-    venue { name: 'Paradise Gardens' },
-    venue { name: 'Atlantis' },
-    venue { name: 'The Blue Fin' },
-    venue { name: 'The Greenhouse' },
-    venue { name: 'Big Orchid' },
-    venue { name: 'Lotus Lakes' },
-    venue { name: 'The Golden Plaza' },
-    venue { name: 'Omni' },
-    venue { name: 'Prime Lands' }
-]
-*/
-
-
-/*
-console.log(JSON.stringify(venues));
-
-Prints
-[
-    {"name":"The Avenue"},
-    {"name":"Paradise Gardens"},
-    {"name":"Atlantis"},
-    {"name":"The Blue Fin"},
-    {"name":"The Greenhouse"},
-    {"name":"Big Orchid"},
-    {"name":"Lotus Lakes"},
-    {"name":"The Golden Plaza"},
-    {"name":"Omni"},
-    {"name":"Prime Lands"}
-]
-*/
-
-// ===> Save json file
-// Save template
-const filePathToVenues = path.join(__dirname, '..', 'Data', 'Venues.json');
-
-const storeDataInJsonFile = async (data) => {
+// Encrypt data into argon2
+const asyncEncryptData = async (dataToEncrypt) => {
     try {
-        await fs.writeFile(filePathToVenues, data);
-    } catch (err) {
-        console.log('There was an error writing data to a JSON file.\n\nError: ' + err);
+        const hashedData = await Promise.all(
+            dataToEncrypt.map(async (data) => {
+                const hash = await argon2.hash(data);
+                return hash;
+            })
+        );
+
+        return hashedData;
+    } catch (error) {
+        console.error('Encryption error:', error);
+        throw error;
     }
 }
 
-// Execute save (commented out due to overlapping saves)
-// storeDataInJsonFile(JSON.stringify(venues));
+const getFilePathByDatabaseType = (databaseType) => {
+    let filepath = '';
+    switch (databaseType) {
+        case 'venue':
+            filepath = filePathToVenues;
+            break;
+        case 'user':
+            filepath = filePathToUsers;
+            break;
+        case 'photo':
+            filepath = filePathToPhotos;
+            break;
+        default:
+            // console.error(`getAllRecords: Invalid databaseType: ${databaseType}`);
+            return;
+    }
+    return filepath;
+};
 
-// ===> Read json file and print contents
+// API Response codes and messages
+const getResponseMessage = responseCode => {
+    if (typeof responseCode != 'number') {
+        console.log(`getResponseMessage: Code is not a number: ${responseCode}`);
+        return;
+    }
+    let responseMessage = '';
 
+    switch (responseCode) {
+        case 200:
+            responseMessage = 'OK';
+            break;
+        case 201:
+            responseMessage = 'Data added successfully'
+            break;
+        case 400:
+            responseMessage = 'Bad Request';
+            break;
+        case 401:
+            responseMessage = 'Unauthorized';
+            break;
+        case 403:
+            responseMessage = 'Forbidden';
+            break;
+        case 404:
+            responseMessage = 'Not Found';
+            break;
+        case 409:
+            responseMessage = 'Request could not be processed';
+            break;
+        case 422:
+            responseMessage = 'Unprocessable Entity';
+            break;
+        case 500:
+            responseMessage = 'Internal Server Error';
+            break;
+        default:
+            responseMessage = 'Unknown Response';
+      }
+
+      return `{ message: ${responseMessage} }`;
+};
+
+module.exports = { createRandomIds, createRandomNumbers, multiplyTwoArrays,
+    asyncEncryptData, createPhotoURLs, getFilePathByDatabaseType,
+    getResponseMessage };
