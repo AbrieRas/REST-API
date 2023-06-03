@@ -1,20 +1,25 @@
 const getRecord = () => {
     const targetedDatabase = document.getElementById('target-db').value;
+    const record = {};
 
-    let record = {};
     if (targetedDatabase === 'venue') {
-        const searchForId = document.getElementById('venue-id').value;
-        record = {
-            id: searchForId.toString(),
-            name: 'Test venue',
-            length: Math.floor(Math.random()*20),
-            width: Math.floor(Math.random()*20),
-            sqMeters: Math.floor(Math.random()*600),
-            address: 'Test address: ' + new Date().getDate()
-        };
+        record.id = document.getElementById('venue-id').value;
+        record.name = document.getElementById('venue-name').value;
+        record['length'] = document.getElementById('venue-length').value;
+        record.width = document.getElementById('venue-width').value;
+        record.sqMeters = document.getElementById('venue-sqMeters').value;
+        record.address = document.getElementById('venue-address').value;
     } else if (targetedDatabase === 'user') {
-        searchForId = document.getElementById('user-id').value;
+        record.id = document.getElementById('user-id').value;
+        record.name = document.getElementById('user-username').vlaue;
+        record['length'] = document.getElementById('user-password').value;
+        record.width = document.getElementById('user-email').value;
     } else if (targetedDatabase === 'photo') {
-        searchForId = document.getElementById('photo-id').value;
+        record.id = document.getElementById('photo-id').value;
+        record.name = document.getElementById('photo-venueId').vlaue;
+        record['length'] = document.getElementById('photo-authorId').value;
+        record.width = document.getElementById('photo-url').value;
     }
+
+    return record;
 };
