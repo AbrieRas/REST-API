@@ -7,7 +7,7 @@ const http = require('http');
 const urlModule = require('url');
 const querystring = require('querystring');
 const { getAllRecords , addRecord, updateRecordByKey, deleteRecordByKey } = require('./databaseHandler');
-const { getResponseMessage } = require('./utility.js');
+const { getResponseMessage, asyncEncryptData } = require('./utility.js');
 
 const server = http.createServer((req, res) => {
     // Set CORS headers
@@ -68,7 +68,13 @@ const server = http.createServer((req, res) => {
                             throw new Error(`API RESPONSE: readFromFileForItems: The id already exists: ${parsedRequestBody.id}`);
                         }
 
-                        addRecord(parsedRequestBody, searchProps['?venue']);
+                        const encryptPasswordAndAddRecord = async () => {
+                            const encryptedPassword = await asyncEncryptData(parsedRequestBody.password);
+                            parsedRequestBody.password = encryptedPassword;
+                            addRecord(parsedRequestBody, searchProps['?venue']);
+                        };
+                        encryptPasswordAndAddRecord();
+
                         // No errors
                         res.statusCode = 201;
                     } catch (error) {
@@ -179,6 +185,3 @@ server.listen('4001', () => {
     const { address, port } = server.address();
     console.log(`INFO: Server is listening on: http://${address}:${port}`);
 });
-
-// This is a simple password
-// 37dff909dcfc37e075a338aafc462711

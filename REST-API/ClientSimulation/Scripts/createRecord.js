@@ -11,14 +11,14 @@ const getRecord = () => {
         record.address = document.getElementById('venue-address').value;
     } else if (targetedDatabase === 'user') {
         record.id = document.getElementById('user-id').value;
-        record.name = document.getElementById('user-username').vlaue;
-        record['length'] = document.getElementById('user-password').value;
-        record.width = document.getElementById('user-email').value;
+        record.username = document.getElementById('user-username').value;
+        record.password = document.getElementById('user-password').value;
+        record.email = document.getElementById('user-email').value;
     } else if (targetedDatabase === 'photo') {
         record.id = document.getElementById('photo-id').value;
-        record.name = document.getElementById('photo-venueId').vlaue;
-        record['length'] = document.getElementById('photo-authorId').value;
-        record.width = document.getElementById('photo-url').value;
+        record.venueId = document.getElementById('photo-venueId').value;
+        record.authorId = document.getElementById('photo-authorId').value;
+        record.url = document.getElementById('photo-url').value;
     }
 
     return record;

@@ -102,14 +102,18 @@ const createPhotoURLs = (amount=10) => {
 // Encrypt data into argon2
 const asyncEncryptData = async (dataToEncrypt) => {
     try {
-        const hashedData = await Promise.all(
-            dataToEncrypt.map(async (data) => {
-                const hash = await argon2.hash(data);
-                return hash;
-            })
-        );
-
-        return hashedData;
+        if (typeof dataToEncrypt === 'array') {
+            const hashedData = await Promise.all(
+                dataToEncrypt.map(async (data) => {
+                    const hash = await argon2.hash(data);
+                    return hash;
+                })
+            );
+            return hashedData;
+        } else if (typeof dataToEncrypt === 'string') {
+            const hashedData = await argon2.hash(dataToEncrypt);
+            return hashedData;
+        }
     } catch (error) {
         console.error('Encryption error:', error);
         throw error;
