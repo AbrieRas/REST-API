@@ -41,4 +41,4 @@ const updateData = () => {
         }
     };
     xhr.send(JSON.stringify(record));
-}
+};

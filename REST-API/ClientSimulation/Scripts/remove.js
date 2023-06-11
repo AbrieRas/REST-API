@@ -3,7 +3,7 @@ const removeData = () => {
     const inputId = document.getElementById("search-for-id").value;
     const inputUpdatedId = document.getElementById("updated-id").value;
     const inputTargetAllRecords = document.querySelector("#replace-all");
-    // Add your code to handle the "Update" button functionality
+    // Handle the "Remove" button functionality
     console.log('Updating data:'
         + '\nvenue: ' + inputVenue.toString()
         + '\nid: ' + inputId.toString()
@@ -30,4 +30,4 @@ const removeData = () => {
         }
     };
     xhr.send();
-}
+};
